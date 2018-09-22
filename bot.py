@@ -9,9 +9,14 @@ word_dig = {'один':1,
 'девять':9,
 'десять':10
 }
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-import logging
+from emoji import emojize
 import ephem
+from glob import glob
+import logging
+from random import choice
+
+from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
+
 import settings
 
 PROXY = {'proxy_url': 'socks5://t1.learn.python.ru:1080',
@@ -22,12 +27,14 @@ logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                     filename='bot.log'
                     )
 
-def greet_user(bot, update):
-    text = 'добро пожаловать в бот, вы нажали /start'
-    logging.info(text)
+def greet_user(bot, update, user_data):
+    smile = emojize(choice(settings.USER_EMOJI), use_aliases=True)
+    user_data['smile'] = smile 
+    text = 'Привет {}'.format(smile)
     update.message.reply_text(text)
 
-def talk_to_me(bot, update):
+
+def talk_to_me(bot, update, user_data):
     user_text = update.message.text 
     print(user_text)
     if user_text[-1] == '=':
@@ -75,7 +82,7 @@ def talk_to_me(bot, update):
     else:
         update.message.reply_text(user_text)
 
-def planet(bot, update):
+def planet(bot, update, user_data):
     planets = [i for _0, _1, i in ephem._libastro.builtin_planets()]
     user_text =  update.message.text.split()
     planet_name = planets[user_text[1]]
@@ -86,7 +93,7 @@ def planet(bot, update):
     else:
         update.message.reply_text(user_text)
 
-def word_count (bot, update):
+def word_count (bot, update, user_data):
     user_text =  update.message.text.split(' ')
     number = 0
     for word in user_text:
@@ -97,17 +104,24 @@ def word_count (bot, update):
     print(number)
     update.message.reply_text('Длина фразы: ' + str(number))
 
+def send_Daniel_picture(bot, update):
+    Dan_list = glob('Daniel/Daniel*.jp*g')
+    Dan_pic = choice(Dan_list)
+    bot.send_photo(chat_id=update.message.chat.id, photo=open(Dan_pic, 'rb')) #read binory читать двоичную 
+
+
 def main():
     mybot = Updater(settings.API_KEY,request_kwargs=settings.PROXY)
     logging.info('бот запускается, не торопите, ему надо подумать')
 
 
     dp = mybot.dispatcher
-    dp.add_handler(CommandHandler("start", greet_user))
-    dp.add_handler(CommandHandler("planet", planet))
-    dp.add_handler(CommandHandler("wordcount", word_count))
+    dp.add_handler(CommandHandler("start", greet_user,pass_user_data=True))
+    dp.add_handler(CommandHandler("planet", planet,pass_user_data=True))
+    dp.add_handler(CommandHandler("wordcount", word_count,pass_user_data=True))
     #dp.add_handler(CommandHandler("calc", calcm))    
-    dp.add_handler(MessageHandler(Filters.text, talk_to_me))
+    dp.add_handler(CommandHandler("daniel", send_Daniel_picture))
+    dp.add_handler(MessageHandler(Filters.text, talk_to_me,pass_user_data=True))
     mybot.start_polling()
     mybot.idle()
 

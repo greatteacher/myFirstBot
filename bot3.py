@@ -13,6 +13,10 @@ from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
 import logging
 import settings
 
+from emoji import emojize
+import ephem
+from glob import glob
+from random import choice
 PROXY = {'proxy_url': 'socks5://t1.learn.python.ru:1080',
     'urllib3_proxy_kwargs': {'username': 'learn', 'password': 'python'}}
 
@@ -25,7 +29,7 @@ def greet_user(bot, update):
     text = 'Вызван /start'
     logging.info(text)
     update.message.reply_text(text)
-
+    
 def wc(bot, update):
     leng = 0
     if user_text.lower().startswith("'"):
