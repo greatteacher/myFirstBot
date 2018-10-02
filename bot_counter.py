@@ -23,7 +23,6 @@ WORD_DIGITS_MAP = {
 }
 
 
-
 logging.basicConfig(format='%(asctime)s - %(levelname)s - %(message)s',
                     level=logging.INFO,
                     filename='bot.log'
@@ -34,15 +33,17 @@ def greet_user(bot, update, user_data):
     smile = emojize(choice(settings.USER_EMOJI), use_aliases=True)
     user_data['smile'] = smile 
     text = 'Привет {}'.format(smile)
-    my_keyboard = ReplyKeyboardMarkup([['Прислать фотки котика','/start','смени авку']]) # то что отображается на кнопке можно добавить чтобы кнопка поменьше , resize_keyboard=True
+    my_keyboard = ReplyKeyboardMarkup([['Прислать котика','/start', 'Сменить авку' ]]) # то что отображается на кнопке можно добавить чтобы кнопка поменьше , resize_keyboard=True
     # Прислать фотки котика
     update.message.reply_text(text, reply_markup=my_keyboard) # удалить скобку и коменты , reply_markup=my_keyboard)
 
-def change_ava(bot,update, user_data):
+
+def change_avatar(bot, update, user_data):
     if 'smile' in user_data:
         del user_data('smile')
     smile = get_user_smile(user_data)
-    update.message.reply_text('Готово: {}'.format(smile))
+    update.message.reply_text('ready: {}'.format(smile))
+
 
 def get_user_smile(user_data):
     if "smile" in user_data:
@@ -52,10 +53,8 @@ def get_user_smile(user_data):
         return user_data['smile']
 
 
-
 def talk_to_me(bot, update, user_data):
-    user_text = "Hello, {} {}! Ты написала: {}".format(update.message.chat.first_name, user_data['smile'],
-                    update.message.text) 
+    user_text = "Hello, {} {}! Ты написал: {}".format(update.message.chat.first_name, user_data['smile'], update.message.text) 
     logging.info("User: %s, Chat id: %s, Message: %s", update.message.chat.id, update.message.text)
     print(user_text)
     if user_text[-1] == '=':
@@ -143,9 +142,9 @@ def main():
     dp.add_handler(CommandHandler("wordcount", word_count,pass_user_data=True))
     # dp.add_handler(CommandHandler("calc", calcm))    
     dp.add_handler(CommandHandler("daniel", send_Daniel_picture))
-    dp.add_handler(RegexHandler('^(Прислать фотки котика)$',send_Daniel_picture, pass_user_data=True))
-    dp.add_handler(RegexHandler('^(смени авку)$', change_ava, pass_user_data=True))
-    dp.add_handler(MessageHandler(Filters.text, talk_to_me,pass_user_data=True))
+    dp.add_handler(RegexHandler('^(Прислать котика)$', send_Daniel_picture, pass_user_data=True))
+    dp.add_handler(RegexHandler('^(Сменить авку)$', change_avatar, pass_user_data=True))
+    dp.add_handler(MessageHandler(Filters.text, talk_to_me, pass_user_data=True))
     mybot.start_polling()
     mybot.idle()
 
