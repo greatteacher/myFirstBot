@@ -52,7 +52,7 @@ def change_avatar(bot, update, user_data):
 
 
 def get_contact(bot, update, user_data):
-    #print(update. message.contact)
+    print(update. message.contact)
     update.message.reply_text('{} это ваш номер: {} ?'.format(update.message.chat.first_name, 
                                                             update.message.contact.phone_number)) #, reply_markup=get_keyboard())    
 
@@ -80,11 +80,11 @@ def get_keyboard():
                                       )     
     return my_keyboard
 def main():
-    mybot = Updater(settings.API_KEY,request_kwargs=settings.PROXY)
+    mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY)
     logging.info('бот запускается, не торопите, ему надо подумать')
 
     dp = mybot.dispatcher # сокращаю майбот.диспетчер, чтбы не писать 100 раз
-    dp.add_handler(CommandHandler("start", greet_user,pass_user_data=True))
+    dp.add_handler(CommandHandler("start", greet_user, pass_user_data=True))
     # dp.add_handler(CommandHandler("calc", calcm))    
     dp.add_handler(CommandHandler("daniel", send_Daniel_picture))
     dp.add_handler(RegexHandler('^(Прислать котика)$', send_Daniel_picture, pass_user_data=True))
