@@ -43,6 +43,7 @@ def send_Daniel_picture(bot, update, user_data):
     Dan_pic = choice(Dan_list)
     bot.send_photo(chat_id=update.message.chat.id, photo=open(Dan_pic, 'rb'), reply_markup=get_keyboard()) #read binory читать двоичную 
 
+
 def change_avatar(bot, update, user_data):
     if 'smile' in user_data:
         del user_data['smile']
@@ -51,8 +52,9 @@ def change_avatar(bot, update, user_data):
 
 
 def get_contact(bot, update, user_data):
-    print(update. message.contact)
-    update.message.reply_text('ready: {}'.format(smile), reply_markup=get_keyboard())
+    #print(update. message.contact)
+    update.message.reply_text('{} это ваш номер: {} ?'.format(update.message.chat.first_name, 
+                                                            update.message.contact.phone_number)) #, reply_markup=get_keyboard())    
 
   
 def get_location(bot, update, user_data):
