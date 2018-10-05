@@ -79,6 +79,8 @@ def get_keyboard():
                                        ], resize_keyboard=True
                                       )     
     return my_keyboard
+
+
 def main():
     mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY)
     logging.info('бот запускается, не торопите, ему надо подумать')

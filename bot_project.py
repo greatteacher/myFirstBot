@@ -31,10 +31,10 @@ def greet_costumer():
 def keyboard_coffee(bot, update):
     # contact_button = KeyboardButton('Пришли контакты', request_contact=True)
     # location_button = KeyboardButton('Пришли локацию', request_location=True)
-    text = 'Привет, что бы вы хотели?'    
+    text = 'Привет, что бы вы хотели из кофейка?'    
     my_button = ReplyKeyboardMarkup([
-                                        ['на главную'],
-                                        ['Americano' ],
+                                        ['на главную', 'корзина'],
+                                        ['Americano' ,'Гляссе'],
                                         ['Capuccino','Latte']
                                         # ,[contact_button,location_button]
                                        ], resize_keyboard=True
@@ -64,6 +64,13 @@ def send_Latte_description(bot, update):
     bot.send_photo(chat_id=update.message.chat.id, photo=open(Dan_pic, 'rb'))
 
 
+def send_Glase_description(bot, update):
+    Glase_list = glob('coffee/coffee4*.jp*g')
+    Glase_pic = choice(Glase_list)
+    text = 'coffee with spoon of ice-cream'
+    bot.send_photo(chat_id=update.message.chat.id, photo=open(Glase_pic, 'rb'))
+
+
 def main():
     mybot = Updater(settings.API_KEY, request_kwargs=settings.PROXY)
     logging.info('бот запускается, не торопите, ему надо подумать')
@@ -74,6 +81,7 @@ def main():
     dp.add_handler(RegexHandler('^(на главную)$', greet_costumer)) #, pass_user_data=True))
     dp.add_handler(RegexHandler('^(Americano)$', send_Americano_description)) # , pass_user_data=True))
     dp.add_handler(RegexHandler('^(Capuccino)$', send_Capuccino_description)) #, pass_user_data=True))
+    dp.add_handler(RegexHandler('^(Гляссе)$', send_Glase_description)) #, pass_user_data=True))
     dp.add_handler(RegexHandler('^(Latte)$', send_Latte_description)) #, pass_user_data=True))
     #dp.add_handler(MessageHandler(Filters.text, talk_to_me, pass_user_data=True))
     #dp.add_handler(MessageHandler(Filters.contact, get_contact, pass_user_data=True))
